@@ -30,8 +30,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.envgit add .env.example .gitignore
+.local
 .env
+!.env.example
 
 # vercel
 .vercel
