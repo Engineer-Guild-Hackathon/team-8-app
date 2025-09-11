@@ -1,5 +1,3 @@
-// components/Header.tsx
-
 import HeaderAuth from "@/components/header-auth";
 import Link from "next/link";
 

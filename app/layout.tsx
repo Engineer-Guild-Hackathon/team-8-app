@@ -1,5 +1,3 @@
-// app/layout.tsx
-
 import { Header } from "@/components/Header"; // Headerをインポート
 import { Footer } from "@/components/Footer"; // Footerをインポート
 import { GoogleOneTap } from "@/components/google-one-tap";
