@@ -16,6 +16,5 @@
 - [ ] pnpm lint 通過
 - [ ] pnpm format 済み
 - [ ] 主要導線の手動確認
-- [ ] CI（Actions）がグリーン
 
 ## 備考
