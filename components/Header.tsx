@@ -1,5 +1,6 @@
-import HeaderAuth from "@/components/header-auth";
-import Link from "next/link";
+import Link from 'next/link';
+
+import HeaderAuth from '@/components/header-auth';
 
 export const Header = () => {
   return (
