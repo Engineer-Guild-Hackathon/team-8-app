@@ -41,3 +41,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude
+CLAUDE.md
+.claude/
+
+# Supabase
+utils/supabase/database.types.ts
