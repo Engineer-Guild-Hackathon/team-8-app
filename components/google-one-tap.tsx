@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import { createClient } from '@/utils/supabase/client';
 
 export function GoogleOneTap() {
@@ -11,7 +12,9 @@ export function GoogleOneTap() {
       return;
     }
 
-    const handleCredentialResponse = async (response: google.CredentialResponse) => {
+    const handleCredentialResponse = async (
+      response: google.CredentialResponse
+    ) => {
       try {
         const supabase = createClient();
         const { data, error } = await supabase.auth.signInWithIdToken({

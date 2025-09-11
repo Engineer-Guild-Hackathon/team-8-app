@@ -1,7 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "../ui/button";
+import { useState } from 'react';
+
+import { Button } from '../ui/button';
 
 const CopyIcon = () => (
   <svg
@@ -50,7 +51,7 @@ export function CodeBlock({ code }: { code: string }) {
       <Button
         size="icon"
         onClick={copy}
-        variant={"outline"}
+        variant={'outline'}
         className="absolute right-2 top-2"
       >
         {icon}

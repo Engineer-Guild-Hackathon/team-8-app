@@ -2,18 +2,23 @@ import { createClient } from '@/utils/supabase/server';
 
 export default async function Instruments() {
   const supabase = await createClient();
-  
+
   // 認証状態を確認
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
   // 認証状態を表示
   console.log('Auth state:', user ? 'Authenticated' : 'Not authenticated');
   if (authError) {
     console.error('Auth error:', authError);
   }
-  
+
   // RLSポリシーを確認するために、認証状態に関わらずデータを取得
-  const { data: instruments, error } = await supabase.from("instruments").select();
+  const { data: instruments, error } = await supabase
+    .from('instruments')
+    .select();
 
   if (error) {
     console.error('Error fetching instruments:', error);
