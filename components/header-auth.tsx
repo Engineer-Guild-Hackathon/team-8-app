@@ -1,18 +1,41 @@
-import Link from 'next/link';
+'use client';
+
+import { useEffect, useState } from 'react';
+
+import type { User } from '@supabase/supabase-js';
 
 import { signOutAction } from '@/app/actions';
 import { hasEnvVars } from '@/utils/supabase/check-env-vars';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/client';
 
+import { LoginModal } from './LoginModal';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 
-export default async function AuthButton() {
-  const supabase = await createClient();
+export default function AuthButton() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    const supabase = createClient();
+    
+    // 初回ユーザー取得
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    // 認証状態変更の監視
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (event === 'SIGNED_IN') {
+        setIsModalOpen(false); // ログイン成功時にモーダルを閉じる
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   if (!hasEnvVars) {
     return (
@@ -50,22 +73,35 @@ export default async function AuthButton() {
       </>
     );
   }
-  return user ? (
-    <div className="flex items-center gap-4">
-      <form action={signOutAction}>
-        <Button type="submit" variant={'outline'}>
-          Sign out
-        </Button>
-      </form>
-    </div>
-  ) : (
-    <div className="flex gap-2">
-      <Button asChild size="sm" variant={'outline'}>
-        <Link href="/sign-in">Sign in</Link>
-      </Button>
-      <Button asChild size="sm" variant={'default'}>
-        <Link href="/sign-up">Sign up</Link>
-      </Button>
-    </div>
+  return (
+    <>
+      {user ? (
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-muted-foreground">
+            {user.email}
+          </span>
+          <form action={signOutAction}>
+            <Button type="submit" variant={'outline'} size="sm">
+              ログアウト
+            </Button>
+          </form>
+        </div>
+      ) : (
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant={'default'}
+            onClick={() => setIsModalOpen(true)}
+          >
+            ログイン
+          </Button>
+        </div>
+      )}
+
+      <LoginModal
+        open={isModalOpen}
+        onOpenChange={setIsModalOpen}
+      />
+    </>
   );
 }
