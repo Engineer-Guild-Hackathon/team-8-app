@@ -30,7 +30,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.envgit add .env.example .gitignore
+.env
+!.env.example
 .local
 .env
 !.env.example
