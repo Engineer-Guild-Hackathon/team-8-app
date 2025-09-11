@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/utils/supabase/server';
-import { encodedRedirect } from '@/utils/utils';
+// import { encodedRedirect } from '@/utils/utils';
 
 // Google認証のみを使用するため、メールアドレス認証関連のアクションは削除しました
 
