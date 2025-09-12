@@ -47,26 +47,42 @@ export const GraphView = ({ slug }: { slug: string }) => {
               {/* === エッジ（学習順序） === */}
               <g aria-label="Edges">
                 <line
-                  x1="120" y1="150" x2="280" y2="150"
-                  stroke="#6366f1" strokeWidth="2"
+                  x1="120"
+                  y1="150"
+                  x2="280"
+                  y2="150"
+                  stroke="#6366f1"
+                  strokeWidth="2"
                   markerEnd={`url(#arrow-${slug})`}
                   className="transition-colors hover:stroke-blue-600"
                 />
                 <line
-                  x1="120" y1="150" x2="200" y2="250"
-                  stroke="#6366f1" strokeWidth="2"
+                  x1="120"
+                  y1="150"
+                  x2="200"
+                  y2="250"
+                  stroke="#6366f1"
+                  strokeWidth="2"
                   markerEnd={`url(#arrow-${slug})`}
                   className="transition-colors hover:stroke-blue-600"
                 />
                 <line
-                  x1="280" y1="150" x2="380" y2="250"
-                  stroke="#6366f1" strokeWidth="2"
+                  x1="280"
+                  y1="150"
+                  x2="380"
+                  y2="250"
+                  stroke="#6366f1"
+                  strokeWidth="2"
                   markerEnd={`url(#arrow-${slug})`}
                   className="transition-colors hover:stroke-blue-600"
                 />
                 <line
-                  x1="200" y1="250" x2="380" y2="250"
-                  stroke="#6366f1" strokeWidth="2"
+                  x1="200"
+                  y1="250"
+                  x2="380"
+                  y2="250"
+                  stroke="#6366f1"
+                  strokeWidth="2"
                   markerEnd={`url(#arrow-${slug})`}
                   className="transition-colors hover:stroke-blue-600"
                 />
@@ -76,45 +92,89 @@ export const GraphView = ({ slug }: { slug: string }) => {
               <g aria-label="Nodes">
                 {/* 基礎 */}
                 <circle
-                  cx="120" cy="150" r="20"
-                  fill="#3b82f6" stroke="#1e40af" strokeWidth="2"
+                  cx="120"
+                  cy="150"
+                  r="20"
+                  fill="#3b82f6"
+                  stroke="#1e40af"
+                  strokeWidth="2"
                   className="transition-colors hover:fill-blue-600 cursor-pointer"
                   filter="url(#glow)"
                 />
-                <text x="120" y="155" fontSize="11" fill="white" textAnchor="middle" fontWeight="bold">
+                <text
+                  x="120"
+                  y="155"
+                  fontSize="11"
+                  fill="white"
+                  textAnchor="middle"
+                  fontWeight="bold"
+                >
                   基礎
                 </text>
 
                 {/* 中級 */}
                 <circle
-                  cx="280" cy="150" r="20"
-                  fill="#8b5cf6" stroke="#7c3aed" strokeWidth="2"
+                  cx="280"
+                  cy="150"
+                  r="20"
+                  fill="#8b5cf6"
+                  stroke="#7c3aed"
+                  strokeWidth="2"
                   className="transition-colors hover:fill-purple-600 cursor-pointer"
                   filter="url(#glow)"
                 />
-                <text x="280" y="155" fontSize="11" fill="white" textAnchor="middle" fontWeight="bold">
+                <text
+                  x="280"
+                  y="155"
+                  fontSize="11"
+                  fill="white"
+                  textAnchor="middle"
+                  fontWeight="bold"
+                >
                   中級
                 </text>
 
                 {/* 応用A */}
                 <circle
-                  cx="200" cy="250" r="18"
-                  fill="#10b981" stroke="#059669" strokeWidth="2"
+                  cx="200"
+                  cy="250"
+                  r="18"
+                  fill="#10b981"
+                  stroke="#059669"
+                  strokeWidth="2"
                   className="transition-colors hover:fill-green-600 cursor-pointer"
                   filter="url(#glow)"
                 />
-                <text x="200" y="255" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">
+                <text
+                  x="200"
+                  y="255"
+                  fontSize="10"
+                  fill="white"
+                  textAnchor="middle"
+                  fontWeight="bold"
+                >
                   応用A
                 </text>
 
                 {/* 応用B */}
                 <circle
-                  cx="380" cy="250" r="18"
-                  fill="#f59e0b" stroke="#d97706" strokeWidth="2"
+                  cx="380"
+                  cy="250"
+                  r="18"
+                  fill="#f59e0b"
+                  stroke="#d97706"
+                  strokeWidth="2"
                   className="transition-colors hover:fill-yellow-600 cursor-pointer"
                   filter="url(#glow)"
                 />
-                <text x="380" y="255" fontSize="10" fill="white" textAnchor="middle" fontWeight="bold">
+                <text
+                  x="380"
+                  y="255"
+                  fontSize="10"
+                  fill="white"
+                  textAnchor="middle"
+                  fontWeight="bold"
+                >
                   応用B
                 </text>
               </g>
@@ -129,7 +189,9 @@ export const GraphView = ({ slug }: { slug: string }) => {
       </div>
 
       <div className="text-center text-sm text-muted-foreground">
-        <p>学習順序が矢印で示されます。ノードをクリックすると教材詳細が表示されます。</p>
+        <p>
+          学習順序が矢印で示されます。ノードをクリックすると教材詳細が表示されます。
+        </p>
       </div>
     </div>
   );
