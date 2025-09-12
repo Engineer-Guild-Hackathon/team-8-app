@@ -18,7 +18,7 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
+export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
@@ -31,12 +31,8 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
+      if (error) throw error;
 
-      if (error) {
-        throw error;
-      }
-      
-      // モーダルを閉じる
       onOpenChange(false);
     } catch (error) {
       console.error('Google認証エラー:', error);
@@ -54,18 +50,19 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
             Googleでログインすると学習プランの保存やMy Pathの表示ができます。
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="grid gap-4 py-4">
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading}
+            aria-busy={isLoading}
             className="w-full flex items-center justify-center gap-2"
             variant="outline"
           >
             {isLoading ? (
               <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
             ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
                 <path
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                   fill="#4285F4"
@@ -97,4 +94,4 @@ export const LoginModal = ({ open, onOpenChange }: LoginModalProps) => {
       </DialogContent>
     </Dialog>
   );
-};
+}
