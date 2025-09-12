@@ -1,17 +1,25 @@
 'use client';
 
 import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MaterialList } from './MaterialList';
-import { GraphView } from './GraphView';
 
-interface TopicViewProps { slug: string; }
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+import { GraphView } from './GraphView';
+import { MaterialList } from './MaterialList';
+
+interface TopicViewProps {
+  slug: string;
+}
 
 export const TopicView = ({ slug }: TopicViewProps) => {
   const [active, setActive] = useState<'list' | 'graph'>('list');
 
   return (
-    <Tabs value={active} onValueChange={v => setActive(v as 'list'|'graph')} className="space-y-6">
+    <Tabs
+      value={active}
+      onValueChange={(v) => setActive(v as 'list' | 'graph')}
+      className="space-y-6"
+    >
       <div className="flex justify-end">
         <TabsList className="grid w-full max-w-[200px] grid-cols-2">
           <TabsTrigger value="list">リスト</TabsTrigger>

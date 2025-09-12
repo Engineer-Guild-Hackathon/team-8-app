@@ -1,6 +1,8 @@
 // app/layout.tsx
 import { Toaster } from 'react-hot-toast';
-import { ThemeProvider } from 'next-themes'; // ダーク/ライトテーマ切り替え
+
+import { ThemeProvider } from 'next-themes';
+// ダーク/ライトテーマ切り替え
 import { Geist } from 'next/font/google';
 
 import { Footer } from '@/components/Footer';

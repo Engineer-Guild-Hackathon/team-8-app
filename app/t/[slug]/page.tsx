@@ -1,9 +1,14 @@
 import Link from 'next/link';
+
 import { TopicView } from '@/components/TopicView';
 
 // 各トピックページ (例: /topics/JavaScript)
 // App Routerのparamsで[slug]を受け取る
-export default async function TopicPage({ params }: { params: { slug: string } }) {
+export default async function TopicPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   // URLパラメータをデコードしてタイトルに使用する
   const title = decodeURIComponent(params.slug);
 

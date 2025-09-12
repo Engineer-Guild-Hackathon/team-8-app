@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+
 import { createClient } from '@/utils/supabase/client';
 
 export function GoogleOneTap() {

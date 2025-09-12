@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -19,7 +20,13 @@ export const MaterialList = ({ slug }: { slug: string }) => {
   const [rows, setRows] = useState<NodeRow[]>([]);
   const [q, setQ] = useState('');
 
-  const sortOptions = ['おすすめ', '難易度低', '難易度高', '時間短', '時間長'] as const;
+  const sortOptions = [
+    'おすすめ',
+    '難易度低',
+    '難易度高',
+    '時間短',
+    '時間長',
+  ] as const;
   type SortBy = (typeof sortOptions)[number];
   const [sortBy, setSortBy] = useState<SortBy>('おすすめ');
 
@@ -50,7 +57,9 @@ export const MaterialList = ({ slug }: { slug: string }) => {
   // 検索・並び替え
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
-    let list = term ? rows.filter((r) => r.title.toLowerCase().includes(term)) : [...rows];
+    let list = term
+      ? rows.filter((r) => r.title.toLowerCase().includes(term))
+      : [...rows];
     switch (sortBy) {
       case '難易度低':
         list.sort((a, b) => (a.difficulty ?? 99) - (b.difficulty ?? 99));
@@ -59,7 +68,9 @@ export const MaterialList = ({ slug }: { slug: string }) => {
         list.sort((a, b) => (b.difficulty ?? -1) - (a.difficulty ?? -1));
         break;
       case '時間短':
-        list.sort((a, b) => (a.durationMin ?? 99999) - (b.durationMin ?? 99999));
+        list.sort(
+          (a, b) => (a.durationMin ?? 99999) - (b.durationMin ?? 99999)
+        );
         break;
       case '時間長':
         list.sort((a, b) => (b.durationMin ?? -1) - (a.durationMin ?? -1));
@@ -112,8 +123,13 @@ export const MaterialList = ({ slug }: { slug: string }) => {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="text-center p-8 text-muted-foreground">
-                    {rows.length === 0 ? '教材を読み込み中...' : '該当する教材が見つかりません'}
+                  <td
+                    colSpan={6}
+                    className="text-center p-8 text-muted-foreground"
+                  >
+                    {rows.length === 0
+                      ? '教材を読み込み中...'
+                      : '該当する教材が見つかりません'}
                   </td>
                 </tr>
               ) : (
@@ -134,7 +150,9 @@ export const MaterialList = ({ slug }: { slug: string }) => {
                               <div
                                 key={i}
                                 className={`w-2 h-2 rounded-full ${
-                                  i < row.difficulty! ? 'bg-primary' : 'bg-muted'
+                                  i < row.difficulty!
+                                    ? 'bg-primary'
+                                    : 'bg-muted'
                                 }`}
                               />
                             ))}
@@ -144,11 +162,15 @@ export const MaterialList = ({ slug }: { slug: string }) => {
                         <span className="text-muted-foreground">-</span>
                       )}
                     </td>
-                    <td className="p-4">{row.durationMin ? `${row.durationMin}分` : '-'}</td>
+                    <td className="p-4">
+                      {row.durationMin ? `${row.durationMin}分` : '-'}
+                    </td>
                     <td className="p-4">
                       {row.costAmount !== undefined ? (
                         row.costAmount === 0 ? (
-                          <span className="text-green-600 font-medium">無料</span>
+                          <span className="text-green-600 font-medium">
+                            無料
+                          </span>
                         ) : (
                           `¥${row.costAmount.toLocaleString()}`
                         )
@@ -159,7 +181,11 @@ export const MaterialList = ({ slug }: { slug: string }) => {
                     <td className="p-4">
                       {row.url ? (
                         <Button size="sm" variant="outline" asChild>
-                          <a href={row.url} target="_blank" rel="noopener noreferrer">
+                          <a
+                            href={row.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             開く
                           </a>
                         </Button>
