@@ -25,14 +25,22 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
     try {
       setIsLoading(true);
       const supabase = createClient();
+
+      const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ??
+        (typeof window !== 'undefined' ? window.location.origin : '');
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${siteUrl}/auth/callback`,
+          // 直前ページに戻したい場合は以下に変更:
+          // const href = typeof window !== 'undefined' ? window.location.href : '/';
+          // redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(href)}`,
         },
       });
-      if (error) throw error;
 
+      if (error) throw error;
       onOpenChange(false);
     } catch (error) {
       console.error('Google認証エラー:', error);
@@ -60,7 +68,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
             variant="outline"
           >
             {isLoading ? (
-              <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+              <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
             ) : (
               <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden>
                 <path
