@@ -1,4 +1,6 @@
 // app/layout.tsx
+import { Toaster } from 'react-hot-toast';
+
 import { ThemeProvider } from 'next-themes';
 // ←今のプロジェクトがnamedならこのまま
 import { Geist } from 'next/font/google';
@@ -57,6 +59,8 @@ export default function RootLayout({
         </ThemeProvider>
         {/* Google One Tap（必要な場合だけ） */}
         <GoogleOneTap />
+        {/* Toast notifications */}
+        <Toaster position="top-right" />
       </body>
     </html>
   );
