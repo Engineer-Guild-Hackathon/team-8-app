@@ -1,4 +1,5 @@
 import Link from 'next/link';
+
 import { TopicView } from '@/components/TopicView';
 
 export default async function TopicPage({
@@ -6,7 +7,7 @@ export default async function TopicPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;         // ← await 必須
+  const { slug } = await params; // ← await 必須
   const title = decodeURIComponent(slug);
 
   return (
@@ -21,7 +22,9 @@ export default async function TopicPage({
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">{title}</h1>
-        <p className="text-muted-foreground">教材一覧と学習順序（グラフ表示）を切り替えられます。</p>
+        <p className="text-muted-foreground">
+          教材一覧と学習順序（グラフ表示）を切り替えられます。
+        </p>
       </div>
 
       <TopicView slug={slug} />

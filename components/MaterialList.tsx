@@ -54,7 +54,9 @@ export const MaterialList = ({ slug }: { slug: string }) => {
         setRows(mapped);
       })
       .catch(console.error);
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [slug]);
 
   // 検索・並び替え

@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
+
+import { useEffect, useRef, useState } from 'react';
 
 interface Node {
   id: string;
@@ -30,10 +31,10 @@ interface D3GraphCanvasProps {
   height?: number;
 }
 
-export const D3GraphCanvas = ({ 
-  slug, 
-  width = 800, 
-  height = 600 
+export const D3GraphCanvas = ({
+  slug,
+  width = 800,
+  height = 600,
 }: D3GraphCanvasProps) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [data, setData] = useState<GraphData | null>(null);
@@ -43,7 +44,9 @@ export const D3GraphCanvas = ({
   useEffect(() => {
     const fetchGraphData = async () => {
       try {
-        const response = await fetch(`/api/graph?topicId=${encodeURIComponent(slug)}`);
+        const response = await fetch(
+          `/api/graph?topicId=${encodeURIComponent(slug)}`
+        );
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const apiData = await response.json();
 
@@ -57,16 +60,31 @@ export const D3GraphCanvas = ({
           source: e.source,
           target: e.target,
         }));
-  
+
         setData({ nodes, edges });
       } catch (error) {
         console.error('Failed to fetch graph data:', error);
         setData({
           nodes: [
-            { id: '1', title: '基礎教材', difficulty: 1, resourceType: 'video' },
+            {
+              id: '1',
+              title: '基礎教材',
+              difficulty: 1,
+              resourceType: 'video',
+            },
             { id: '2', title: '中級教材', difficulty: 3, resourceType: 'book' },
-            { id: '3', title: '応用教材A', difficulty: 4, resourceType: 'course' },
-            { id: '4', title: '応用教材B', difficulty: 5, resourceType: 'project' },
+            {
+              id: '3',
+              title: '応用教材A',
+              difficulty: 4,
+              resourceType: 'course',
+            },
+            {
+              id: '4',
+              title: '応用教材B',
+              difficulty: 5,
+              resourceType: 'project',
+            },
           ],
           edges: [
             { source: '1', target: '2' },
@@ -86,24 +104,26 @@ export const D3GraphCanvas = ({
   // D3 グラフ描画
   useEffect(() => {
     if (!data || !svgRef.current) return;
-  
+
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove(); // 既存クリア
-  
+
     // 先にコンテナ
     const container = svg.append('g');
-  
+
     // ズーム・パン
-    const zoom = d3.zoom<SVGSVGElement, unknown>()
+    const zoom = d3
+      .zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.1, 4])
       .on('zoom', (event) => {
         container.attr('transform', event.transform);
       });
-  
+
     svg.call(zoom as any);
-  
+
     // 矢印マーカー
-    svg.append('defs')
+    svg
+      .append('defs')
       .append('marker')
       .attr('id', `arrowhead-${slug}`)
       .attr('viewBox', '0 -5 10 10')
@@ -117,14 +137,22 @@ export const D3GraphCanvas = ({
       .style('fill', '#6366f1');
 
     // フォース
-    const simulation = d3.forceSimulation<Node>(data.nodes)
-      .force('link', d3.forceLink<Node, Edge>(data.edges).id(d => d.id).distance(100))
+    const simulation = d3
+      .forceSimulation<Node>(data.nodes)
+      .force(
+        'link',
+        d3
+          .forceLink<Node, Edge>(data.edges)
+          .id((d) => d.id)
+          .distance(100)
+      )
       .force('charge', d3.forceManyBody().strength(-300))
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius(30));
 
     // エッジ描画
-    const link = container.append('g')
+    const link = container
+      .append('g')
       .attr('class', 'links')
       .selectAll('line')
       .data(data.edges)
@@ -136,64 +164,73 @@ export const D3GraphCanvas = ({
       .attr('marker-end', `url(#arrowhead-${slug})`);
 
     // ノード描画
-    const node = container.append('g')
+    const node = container
+      .append('g')
       .attr('class', 'nodes')
       .selectAll('g')
       .data(data.nodes)
       .enter()
       .append('g')
       .attr('class', 'node')
-      .call(d3.drag<SVGGElement, Node>()
-        .on('start', dragstarted)
-        .on('drag', dragged)
-        .on('end', dragended)
+      .call(
+        d3
+          .drag<SVGGElement, Node>()
+          .on('start', dragstarted)
+          .on('drag', dragged)
+          .on('end', dragended)
       );
 
     // ノードの色を難易度に基づいて決定
     const getNodeColor = (difficulty?: number) => {
       if (!difficulty) return '#9ca3af';
       switch (difficulty) {
-        case 1: return '#3b82f6'; // 青
-        case 2: return '#10b981'; // 緑
-        case 3: return '#8b5cf6'; // 紫
-        case 4: return '#f59e0b'; // 黄
-        case 5: return '#ef4444'; // 赤
-        default: return '#6b7280';
+        case 1:
+          return '#3b82f6'; // 青
+        case 2:
+          return '#10b981'; // 緑
+        case 3:
+          return '#8b5cf6'; // 紫
+        case 4:
+          return '#f59e0b'; // 黄
+        case 5:
+          return '#ef4444'; // 赤
+        default:
+          return '#6b7280';
       }
     };
 
     // ノード円描画
-    node.append('circle')
+    node
+      .append('circle')
       .attr('r', 20)
-      .attr('fill', d => getNodeColor(d.difficulty))
+      .attr('fill', (d) => getNodeColor(d.difficulty))
       .attr('stroke', '#fff')
       .attr('stroke-width', 2)
       .style('cursor', 'pointer')
-      .on('mouseover', function() {
-        d3.select(this)
-          .transition()
-          .duration(100)
-          .attr('r', 25);
+      .on('mouseover', function () {
+        d3.select(this).transition().duration(100).attr('r', 25);
       })
-      .on('mouseout', function() {
-        d3.select(this)
-          .transition()
-          .duration(100)
-          .attr('r', 20);
+      .on('mouseout', function () {
+        d3.select(this).transition().duration(100).attr('r', 20);
       });
 
     // ノードテキスト
-    node.append('text')
+    node
+      .append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
       .attr('font-size', '10px')
       .attr('font-weight', 'bold')
       .attr('fill', 'white')
       .attr('pointer-events', 'none')
-      .text(d => d.title.length > 6 ? d.title.substring(0, 6) + '...' : d.title);
+      .text((d) =>
+        d.title.length > 6 ? d.title.substring(0, 6) + '...' : d.title
+      );
 
     // ツールチップ
-    const tooltip = d3.select('body').append('div')
+    const tooltip = d3
+      .select('body')
+      .append('div')
       .attr('class', 'tooltip')
       .style('position', 'absolute')
       .style('padding', '8px')
@@ -205,29 +242,32 @@ export const D3GraphCanvas = ({
       .style('opacity', 0);
 
     node
-      .on('mouseover', function(event, d) {
+      .on('mouseover', function (event, d) {
         tooltip.transition().duration(200).style('opacity', 1);
-        tooltip.html(`
+        tooltip
+          .html(
+            `
           <div><strong>${d.title}</strong></div>
           <div>難易度: ${d.difficulty ? d.difficulty + '/5' : '未設定'}</div>
           <div>種類: ${d.resourceType}</div>
-        `)
-          .style('left', (event.pageX + 10) + 'px')
-          .style('top', (event.pageY - 10) + 'px');
+        `
+          )
+          .style('left', event.pageX + 10 + 'px')
+          .style('top', event.pageY - 10 + 'px');
       })
-      .on('mouseout', function() {
+      .on('mouseout', function () {
         tooltip.transition().duration(200).style('opacity', 0);
       });
 
     // シミュレーション更新
     simulation.on('tick', () => {
       link
-        .attr('x1', d => (d.source as Node).x!)
-        .attr('y1', d => (d.source as Node).y!)
-        .attr('x2', d => (d.target as Node).x!)
-        .attr('y2', d => (d.target as Node).y!);
+        .attr('x1', (d) => (d.source as Node).x!)
+        .attr('y1', (d) => (d.source as Node).y!)
+        .attr('x2', (d) => (d.target as Node).x!)
+        .attr('y2', (d) => (d.target as Node).y!);
 
-      node.attr('transform', d => `translate(${d.x},${d.y})`);
+      node.attr('transform', (d) => `translate(${d.x},${d.y})`);
     });
 
     // ドラッグ関数
@@ -279,7 +319,7 @@ export const D3GraphCanvas = ({
           className="w-full h-auto"
           style={{ minHeight: '600px' }}
         />
-        
+
         {/* 操作ガイド */}
         <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg text-xs text-gray-600 border">
           <div className="space-y-1">
@@ -289,9 +329,11 @@ export const D3GraphCanvas = ({
           </div>
         </div>
       </div>
-      
+
       <div className="text-center text-sm text-muted-foreground">
-        <p>学習順序が矢印で示されます。ノードをドラッグして配置を調整できます。</p>
+        <p>
+          学習順序が矢印で示されます。ノードをドラッグして配置を調整できます。
+        </p>
       </div>
     </div>
   );
