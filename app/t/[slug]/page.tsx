@@ -2,8 +2,13 @@ import Link from 'next/link';
 
 import { TopicView } from '@/components/TopicView';
 
-export default function TopicPage({ params }: any) {
-  const title = decodeURIComponent(params.slug);
+export default async function TopicPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params; // ← await 必須
+  const title = decodeURIComponent(slug);
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
@@ -22,7 +27,7 @@ export default function TopicPage({ params }: any) {
         </p>
       </div>
 
-      <TopicView slug={params.slug} />
+      <TopicView slug={slug} />
     </div>
   );
 }

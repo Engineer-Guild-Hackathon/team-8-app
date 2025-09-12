@@ -33,18 +33,23 @@ export const MaterialList = ({ slug }: { slug: string }) => {
   // データ取得
   useEffect(() => {
     let mounted = true;
-    fetch(`/api/graph?topicId=${encodeURIComponent(slug)}`)
+    fetch(`/api/graph?slug=${encodeURIComponent(slug)}`) // ← slugに統一
       .then((r) => r.json())
       .then((data) => {
         if (!mounted) return;
-        const mapped: NodeRow[] = (data?.nodes ?? []).map((n: any) => ({
-          id: n.id,
-          title: n.title,
-          resourceType: n.resourceType ?? 'other',
-          difficulty: n.difficulty,
-          durationMin: n.durationMin,
-          costAmount: n.costAmount,
-          url: n.url,
+        const arr = Array.isArray(data?.nodes)
+          ? data.nodes
+          : Array.isArray(data?.items)
+            ? data.items
+            : [];
+        const mapped: NodeRow[] = arr.map((n: any) => ({
+          id: String(n.id),
+          title: String(n.title ?? ''),
+          resourceType: n.resourceType ?? n.type ?? 'other',
+          difficulty: n.difficulty ?? undefined,
+          durationMin: n.durationMin ?? n.duration_min ?? undefined,
+          costAmount: n.costAmount ?? n.cost_amount ?? undefined,
+          url: n.url ?? undefined,
         }));
         setRows(mapped);
       })

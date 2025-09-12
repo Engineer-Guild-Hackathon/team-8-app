@@ -7,13 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { GraphView } from './GraphView';
 import { MaterialList } from './MaterialList';
 
-interface TopicViewProps {
-  slug: string;
-}
-
-export const TopicView = ({ slug }: TopicViewProps) => {
+export function TopicView({ slug }: { slug: string }) {
   const [active, setActive] = useState<'list' | 'graph'>('list');
-
   return (
     <Tabs
       value={active}
@@ -26,7 +21,6 @@ export const TopicView = ({ slug }: TopicViewProps) => {
           <TabsTrigger value="graph">グラフ</TabsTrigger>
         </TabsList>
       </div>
-
       <TabsContent value="list" className="mt-0">
         <MaterialList slug={slug} />
       </TabsContent>
@@ -35,4 +29,4 @@ export const TopicView = ({ slug }: TopicViewProps) => {
       </TabsContent>
     </Tabs>
   );
-};
+}
