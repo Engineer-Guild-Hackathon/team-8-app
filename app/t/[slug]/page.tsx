@@ -2,16 +2,11 @@ import Link from 'next/link';
 
 import { TopicView } from '@/components/TopicView';
 
-// 各トピックページ (例: /topics/JavaScript)
-// App Routerのparamsで[slug]を受け取る
-export default function TopicPage({ params }: { params: { slug: string } }) {
-  // URLパラメータをデコードしてタイトルに使用する
-  const { slug } = params;
+export default function TopicPage({ params }: any) {
   const title = decodeURIComponent(params.slug);
 
   return (
     <div className="container mx-auto px-4 py-6 max-w-7xl">
-      {/* パンくずリスト */}
       <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
         <Link href="/" className="hover:text-foreground transition-colors">
           ホーム
@@ -20,7 +15,6 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         <span className="text-foreground font-medium">{title}</span>
       </nav>
 
-      {/* ページヘッダー */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">{title}</h1>
         <p className="text-muted-foreground">
@@ -28,7 +22,6 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
         </p>
       </div>
 
-      {/* トピック詳細(リスト/グラフ表示） */}
       <TopicView slug={params.slug} />
     </div>
   );
