@@ -320,8 +320,35 @@ export const D3GraphCanvas = ({
           style={{ minHeight: '600px' }}
         />
 
+        {/* 凡例カード */}
+        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-3 rounded-lg text-xs border shadow-sm">
+          <h4 className="font-semibold text-gray-800 mb-2">難易度</h4>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#3b82f6]"></div>
+              <span>レベル1 - 入門</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#10b981]"></div>
+              <span>レベル2 - 初級</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#8b5cf6]"></div>
+              <span>レベル3 - 中級</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
+              <span>レベル4 - 上級</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
+              <span>レベル5 - 専門</span>
+            </div>
+          </div>
+        </div>
+
         {/* 操作ガイド */}
-        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg text-xs text-gray-600 border">
+        <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-lg text-xs text-gray-600 border shadow-sm">
           <div className="space-y-1">
             <div>🖱️ ドラッグ: ノード移動</div>
             <div>🔍 ホイール: ズーム</div>
