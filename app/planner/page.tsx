@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
   title: '学習プランナー - LearnGraph',
@@ -10,13 +10,7 @@ export default function PlannerPage() {
   return (
     <div className="container mx-auto px-4 py-6 max-w-4xl">
       {/* パンくず */}
-      <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-        <Link href="/" className="hover:text-foreground transition-colors">
-          ホーム
-        </Link>
-        <span>›</span>
-        <span className="text-foreground font-medium">プランナー</span>
-      </nav>
+      <Breadcrumbs items={[{ label: 'ホーム', href: '/' }, { label: 'プランナー' }]} />
 
       {/* ページヘッダー */}
       <div className="mb-8">
