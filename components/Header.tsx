@@ -16,10 +16,10 @@ export const Header = () => {
         {/* 右側: ドキュメントとログイン/ユーザー情報 */}
         <div className="flex items-center gap-6">
           <Link
-            href="/docs" // ドキュメントページのパス（仮）
+            href="/planner"
             className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-primary md:block"
           >
-            ドキュメント
+            プランナー
           </Link>
 
           <HeaderAuth />
