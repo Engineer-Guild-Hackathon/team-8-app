@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useCallback } from 'react';
 
 // 教材ノードの型定義
 type NodeRow = {
@@ -19,7 +20,6 @@ type NodeRow = {
 export const MaterialList = ({ slug }: { slug: string }) => {
   const [rows, setRows] = useState<NodeRow[]>([]);
   const [q, setQ] = useState('');
-
   const sortOptions = [
     'おすすめ',
     '難易度低',
@@ -29,6 +29,8 @@ export const MaterialList = ({ slug }: { slug: string }) => {
   ] as const;
   type SortBy = (typeof sortOptions)[number];
   const [sortBy, setSortBy] = useState<SortBy>('おすすめ');
+  const [comment, setComment] = useState('');
+  const [commentLoading, setCommentLoading] = useState(false);
 
   // データ取得
   useEffect(() => {
@@ -68,9 +70,7 @@ export const MaterialList = ({ slug }: { slug: string }) => {
         list.sort((a, b) => (b.difficulty ?? -1) - (a.difficulty ?? -1));
         break;
       case '時間短':
-        list.sort(
-          (a, b) => (a.durationMin ?? 99999) - (b.durationMin ?? 99999)
-        );
+        list.sort((a, b) => (a.durationMin ?? 99999) - (b.durationMin ?? 99999));
         break;
       case '時間長':
         list.sort((a, b) => (b.durationMin ?? -1) - (a.durationMin ?? -1));
@@ -79,8 +79,43 @@ export const MaterialList = ({ slug }: { slug: string }) => {
     return list;
   }, [q, rows, sortBy]);
 
+  // OpenAI APIで教材リストを要約
+  const fetchComment = useCallback(async () => {
+    setCommentLoading(true);
+    try {
+      // テーブルデータを簡潔にまとめる
+      const tableSummary = filtered
+        .map((row) => `教材名: ${row.title}, 種類: ${row.resourceType}, 難易度: ${row.difficulty ?? '-'}, 時間: ${row.durationMin ?? '-'}分, 費用: ${row.costAmount ?? '-'}円`)
+        .slice(0, 10)
+        .join('\n');
+      const prompt = `以下は学習教材の一覧です。内容を3行以内の日本語で要約・コメントしてください。\n${tableSummary}`;
+      const res = await fetch('/api/openai-comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await res.json();
+      setComment(data.comment ?? 'コメント取得に失敗しました');
+    } catch (e) {
+      setComment('コメント取得に失敗しました');
+    } finally {
+      setCommentLoading(false);
+    }
+  }, [filtered]);
+
   return (
     <div className="space-y-4">
+      {/* AIコメント */}
+      <div className="flex items-center gap-2">
+        <Button size="sm" variant="outline" onClick={fetchComment} disabled={commentLoading}>
+          {commentLoading ? 'コメント生成中...' : 'AIコメント生成'}
+        </Button>
+        {comment && (
+          <div className="text-sm text-muted-foreground whitespace-pre-line border rounded px-3 py-2 bg-muted/30">
+            {comment}
+          </div>
+        )}
+      </div>
       {/* 検索・並び替え */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <Input
