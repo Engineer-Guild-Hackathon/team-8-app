@@ -88,8 +88,8 @@ export const MaterialList = ({ slug }: { slug: string }) => {
         .map((row) => `教材名: ${row.title}, 種類: ${row.resourceType}, 難易度: ${row.difficulty ?? '-'}, 時間: ${row.durationMin ?? '-'}分, 費用: ${row.costAmount ?? '-'}円`)
         .slice(0, 10)
         .join('\n');
-      const prompt = `以下は学習教材の一覧です。内容を3行以内の日本語で要約・コメントしてください。\n${tableSummary}`;
-      const res = await fetch('/api/openai-comment', {
+      const prompt = `以下は学習教材の一覧です。内容を3行以内の日本語でコメントしてください。\n${tableSummary}`;
+      const res = await fetch('/api/llm/openai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt }),
