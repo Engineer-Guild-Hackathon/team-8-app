@@ -5,12 +5,12 @@ insert into public.topics (slug, title, description)
 values ('web-dev', 'Web開発', 'Web開発の基礎から応用')
 on conflict (slug) do nothing;
 
-insert into public.resources (type, title, url, difficulty, description)
+insert into public.resources (type, title, url, difficulty, duration_min, cost_amount, description)
 values
-  ('video',  '基礎教材', 'https://example.com/r1', 1, 'HTML/CSS/JSの超入門'),
-  ('book',   '中級教材', 'https://example.com/r2', 3, 'フロントエンド中級'),
-  ('course', '応用教材A','https://example.com/r3', 4, '実践React'),
-  ('repo',   '応用教材B','https://example.com/r4', 5, 'サンプル実装集')
+  ('video',  '基礎教材', 'https://example.com/r1', 1, 180, 0, 'HTML/CSS/JSの超入門'),
+  ('book',   '中級教材', 'https://example.com/r2', 3, 240, 1500, 'フロントエンド中級'),
+  ('course', '応用教材A','https://example.com/r3', 4, 360, 3000, '実践React'),
+  ('repo',   '応用教材B','https://example.com/r4', 5, 480, 0, 'サンプル実装集')
 on conflict (url) do nothing;
 
 -- Topic -> Resource 関連（このトピックの教材）

@@ -52,39 +52,103 @@ function getDifficultyLabel(avgDifficulty: number): string {
 
 // グラフデータ取得（Supabase → 失敗時はサンプル）
 async function fetchGraphData(topicId: string): Promise<GraphData> {
+  console.log(`Starting fetchGraphData for topicId: ${topicId}`);
+  console.log('Environment check:', {
+    hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+  });
   try {
     const supabase = await createClient();
+    console.log('Supabase client created');
 
+    // トピックIDでスラッグを取得
+    console.log(`Querying topics table for slug: ${topicId}`);
+    const { data: topic, error: topicError } = await supabase
+      .from('topics')
+      .select('id')
+      .eq('slug', topicId)
+      .single();
+    
+    console.log('Topic query result:', { topic, topicError });
+    
+    if (topicError) {
+      console.error('Topic not found:', topicError);
+      return getSampleGraphData(topicId);
+    }
+
+    // トピックに関連するエッジを取得
+    console.log(`Querying edges table for topic.id: ${topic.id}`);
+    const { data: topicEdges, error: edgesError } = await supabase
+      .from('edges')
+      .select('to_id')
+      .eq('from_type', 'topic')
+      .eq('from_id', topic.id)
+      .eq('to_type', 'resource')
+      .eq('is_active', true);
+    
+    console.log('Topic edges query result:', { topicEdges, edgesError });
+    
+    if (edgesError) throw edgesError;
+    if (!topicEdges || topicEdges.length === 0) {
+      console.log('No edges found for topic');
+      return getSampleGraphData(topicId);
+    }
+
+    // リソースIDを抽出
+    const resourceIds = topicEdges.map(edge => edge.to_id);
+    console.log(`Found ${resourceIds.length} resource IDs:`, resourceIds);
+
+    // リソース詳細を取得
     const { data: resources, error: resourcesError } = await supabase
       .from('resources')
-      .select('*')
-      .eq('topic_id', topicId);
+      .select('id, title, type, difficulty, duration_min, cost_amount, description')
+      .in('id', resourceIds);
+    
+    console.log('Resources query result:', { resources, resourcesError });
+    
     if (resourcesError) throw resourcesError;
 
-    const { data: edges, error: edgesError } = await supabase
+    // リソース間の依存関係を取得
+    const { data: dependencies, error: dependenciesError } = await supabase
       .from('edges')
-      .select('*')
-      .eq('topic_id', topicId);
-    if (edgesError) throw edgesError;
+      .select('from_id, to_id, weight')
+      .eq('from_type', 'resource')
+      .eq('to_type', 'resource')
+      .eq('is_active', true)
+      .in('from_id', resourceIds)
+      .in('to_id', resourceIds);
+    
+    if (dependenciesError) throw dependenciesError;
 
-    const nodes: GraphNode[] = (resources || []).map((r: any) => ({
+    // GraphNodeの形式に変換
+    const nodes: GraphNode[] = resources.map((r: any) => ({
       id: String(r.id),
       title: String(r.title || ''),
-      difficulty: r.difficulty,
-      durationMin: r.duration_min,
-      costAmount: r.cost_amount,
+      difficulty: r.difficulty || 1,
+      durationMin: r.duration_min || 60,
+      costAmount: r.cost_amount || 0,
       resourceType: r.type || 'other',
     }));
 
-    const graphEdges = (edges || []).map((e: any) => ({
-      source: String(e.source_id),
-      target: String(e.target_id),
+    // Edgeの形式に変換
+    const graphEdges = (dependencies || []).map((e: any) => ({
+      source: String(e.from_id),
+      target: String(e.to_id),
       weight: e.weight || 1,
     }));
+
+    console.log(`Fetched ${nodes.length} resources and ${graphEdges.length} dependencies for topic: ${topicId}`);
+    
+    if (nodes.length === 0) {
+      console.log('No resources found, using sample data');
+      return getSampleGraphData(topicId);
+    }
 
     return { nodes, edges: graphEdges };
   } catch (error) {
     console.error('Error fetching graph data:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace');
     return getSampleGraphData(topicId);
   }
 }
