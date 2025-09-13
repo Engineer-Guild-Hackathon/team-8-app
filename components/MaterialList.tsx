@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useCallback } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useCallback } from 'react';
 
 // 教材ノードの型定義
 type NodeRow = {
@@ -70,7 +70,9 @@ export const MaterialList = ({ slug }: { slug: string }) => {
         list.sort((a, b) => (b.difficulty ?? -1) - (a.difficulty ?? -1));
         break;
       case '時間短':
-        list.sort((a, b) => (a.durationMin ?? 99999) - (b.durationMin ?? 99999));
+        list.sort(
+          (a, b) => (a.durationMin ?? 99999) - (b.durationMin ?? 99999)
+        );
         break;
       case '時間長':
         list.sort((a, b) => (b.durationMin ?? -1) - (a.durationMin ?? -1));
@@ -85,7 +87,10 @@ export const MaterialList = ({ slug }: { slug: string }) => {
     try {
       // テーブルデータを簡潔にまとめる
       const tableSummary = filtered
-        .map((row) => `教材名: ${row.title}, 種類: ${row.resourceType}, 難易度: ${row.difficulty ?? '-'}, 時間: ${row.durationMin ?? '-'}分, 費用: ${row.costAmount ?? '-'}円`)
+        .map(
+          (row) =>
+            `教材名: ${row.title}, 種類: ${row.resourceType}, 難易度: ${row.difficulty ?? '-'}, 時間: ${row.durationMin ?? '-'}分, 費用: ${row.costAmount ?? '-'}円`
+        )
         .slice(0, 10)
         .join('\n');
       const prompt = `以下は学習教材の一覧です。内容を3行以内の日本語でコメントしてください。\n${tableSummary}`;
@@ -107,7 +112,12 @@ export const MaterialList = ({ slug }: { slug: string }) => {
     <div className="space-y-4">
       {/* AIコメント */}
       <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline" onClick={fetchComment} disabled={commentLoading}>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={fetchComment}
+          disabled={commentLoading}
+        >
           {commentLoading ? 'コメント生成中...' : 'AIコメント生成'}
         </Button>
         {comment && (
